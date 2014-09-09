@@ -1,0 +1,15 @@
+http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap-theme.min.css
+http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css
+http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
+http://code.angularjs.org/1.2.14/angular.min.js
+http://code.angularjs.org/1.2.14/angular-cookies.min.js
+http://code.angularjs.org/1.2.14/i18n/angular-locale_zh-cn.js
+http://code.angularjs.org/1.2.14/angular-resource.min.js
+http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js
+http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js
+http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js
+http://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap.min.js
+http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.map
+http://code.angularjs.org/1.2.14/angular.min.js.map
+http://code.angularjs.org/1.2.14/angular-cookies.min.js.map
+http://code.angularjs.org/1.2.14/angular-resource.min.js.map
