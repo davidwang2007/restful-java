@@ -6,6 +6,7 @@ package com.david.web.rest.filter;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,6 +36,8 @@ public class RestFilter implements Filter {
 	
 	private FilterConfig filterConfig;
 	
+	private static final Pattern pattern = Pattern.compile("\\.(js|css|png|gif|html|jpg|jpeg|xml)$", Pattern.CASE_INSENSITIVE);
+	
 	@Override
 	public void destroy() {
 
@@ -49,6 +52,11 @@ public class RestFilter implements Filter {
 		
 		String uri = req.getRequestURI();
 		logger.info(String.format("doFilter uri-> %s", uri));
+		
+		if(pattern.matcher(uri).find()){//表示访问的是静态资源
+			chain.doFilter(req, resp);
+			return;
+		}
 		
 		String contextPath = filterConfig.getServletContext().getContextPath();
 		if(contextPath.length() > 1 && uri.length() > contextPath.length()){
