@@ -25,6 +25,7 @@ step 1. 在web.xml中添加rest过滤器，如下所示
     </filter-mapping>
 step 2. 定义自己的controller
 	controller为POJO类
+	
 	 * Class上有的注解为Path【*】
 	 * 类中方法上的注解为：
 	 * Path
