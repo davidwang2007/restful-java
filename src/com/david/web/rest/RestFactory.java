@@ -67,24 +67,27 @@ public class RestFactory {
 	 */
 	public <T> void register(Class<T> clazz){
 		//logger.info("try to register class " + clazz);
-		if(!clazz.isAnnotationPresent(Path.class)){
-			logger.warning(clazz + " should have Path annotation! Register failure!");
-			return;
+		String pathPrefix = "";
+		//if class with on @Path annotation, consider it's empty string
+		if(clazz.isAnnotationPresent(Path.class)){
+			logger.warning(clazz + " should have Path annotation!");
+			pathPrefix = clazz.getAnnotation(Path.class).value();
 		}
-		//root path
-		String pathPrefix = clazz.getAnnotation(Path.class).value();
 		//iterator the method
 		for(Method method : clazz.getDeclaredMethods()){
-			//如果此方法没有Path或RequestMethod注解则证明此方法不是用来处理请求的
-			if(!method.isAnnotationPresent(Path.class) || !method.isAnnotationPresent(RequestMethod.class)) continue;
-			RequestMethod requestMethod = method.getAnnotation(RequestMethod.class);
+			//如果此方法没有Path注解则证明此方法不是用来处理请求的
+			if(!method.isAnnotationPresent(Path.class)) continue;
 			Path path = method.getAnnotation(Path.class);
 			UriHandlerMetaData metaData = new UriHandlerMetaData();
 			metaData.setClazz(clazz);
 			metaData.setMethod(method);
-			metaData.setPath(String.format("%s%s", pathPrefix,path.value()));
+			metaData.setPath(String.format("%s%s", pathPrefix,path.value()).replaceAll("//", "/").replaceAll("/$",""));
 			//
-			String reqMethod = requestMethod.value();
+			String reqMethod = RequestMethod.GET;
+			//if no @RequestMethod, consider it's HTTP GET
+			if(method.isAnnotationPresent(RequestMethod.class)){
+				reqMethod = method.getAnnotation(RequestMethod.class).value();
+			}
 			if(reqMethod.equalsIgnoreCase(RequestMethod.GET)){
 				getHandlers.add(metaData);
 			}else if(reqMethod.equalsIgnoreCase(RequestMethod.POST)){

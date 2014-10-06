@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="david-restful" default="mkjar" basedir=".">
+	<property name="src.dir" value="src" />
+	<property name="build.dir" value="bin" />
+	<property name="name" value="david-restful" />
+
+	<path id="master-classpath">
+		<fileset dir="libs">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${build.dir}" />
+	</path>
+
+	<target name="usage">
+		<echo message="" />
+		<echo message="${name} build file" />
+		<echo message="-----------------------------------" />
+		<echo message="" />
+		<echo message="Available targets are:" />
+		<echo message="" />
+		<echo message="build     --> Build the application" />
+		<echo message="mkjar    --> Make jar" />
+		<echo message="" />
+	</target>
+
+	<target name="build" description="compile main source tree java files">
+		<mkdir dir="${build.dir}" />
+		<javac destdir="${build.dir}" source="1.6" target="1.6" debug="true"
+		    includeantruntime="false"
+			deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="master-classpath" />
+		</javac>
+	</target>
+
+
+	<target name="mkjar" depends="build" description="build war files">
+		<jar destfile="target/${name}.jar" basedir="${build.dir}" excludes="**/*Test.class"/>
+	</target>
+	
+</project>
