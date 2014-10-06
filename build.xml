@@ -26,7 +26,7 @@
 	<target name="build" description="compile main source tree java files">
 		<mkdir dir="${build.dir}" />
 		<javac destdir="${build.dir}" source="1.6" target="1.6" debug="true"
-		    includeantruntime="false"
+		    includeantruntime="false" encoding="UTF-8"
 			deprecation="false" optimize="false" failonerror="true">
 			<src path="${src.dir}" />
 			<classpath refid="master-classpath" />
