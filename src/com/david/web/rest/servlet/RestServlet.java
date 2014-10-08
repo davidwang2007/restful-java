@@ -81,7 +81,7 @@ public class RestServlet extends HttpServlet {
 			resp.setStatus(404);
 			resp.getWriter().println(uri+" Unknown Uri Location! (Powered By D.W. RESTFul)");
 		}else{
-			RestUtil.handleRequest(this, req, resp, uri, handler);
+			RestUtil.handleRequest(null, req, resp, uri, handler);
 		}
 
 	}

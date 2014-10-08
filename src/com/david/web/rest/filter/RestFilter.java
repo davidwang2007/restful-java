@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -36,11 +37,13 @@ public class RestFilter implements Filter {
 	
 	private FilterConfig filterConfig;
 	
+	public static ServletContext context;
+	
 	private static final Pattern pattern = Pattern.compile("\\.(js|css|png|gif|html|jpg|jpeg|xml)$", Pattern.CASE_INSENSITIVE);
 	
 	@Override
 	public void destroy() {
-
+		context = null;
 	}
 
 	@Override
@@ -92,6 +95,7 @@ public class RestFilter implements Filter {
 					RestService.registeInterceptor(clazz);
 			}
 		filterConfig = config;
+		context = config.getServletContext();
 	}
 	/**
 	 * judge if a class implements clazz

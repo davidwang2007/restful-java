@@ -37,6 +37,7 @@ import com.david.web.rest.annotation.RequestHeader;
 import com.david.web.rest.annotation.RequestJson;
 import com.david.web.rest.annotation.RequestParam;
 import com.david.web.rest.annotation.ResponseType;
+import com.david.web.rest.filter.RestFilter;
 import com.google.gson.Gson;
 
 /**
@@ -212,7 +213,7 @@ public class RestUtil {
 	 * @throws ServletException
 	 * @throws IOException
 	 */
-	public static void handleRequest(HttpServlet servlet,HttpServletRequest req, HttpServletResponse resp,String uri,UriHandlerMetaData handler)
+	public static void handleRequest(ServletContext context,HttpServletRequest req, HttpServletResponse resp,String uri,UriHandlerMetaData handler)
 			throws ServletException, IOException{
 		//modified by www 修改添加过滤器  started
 		for(InterceptorHandlerMetaData data : RestService.factory().getInterceptorHandlers()){
@@ -295,9 +296,10 @@ public class RestUtil {
 			}else if(parameterType.equals(HttpSession.class)){
 				parameters[i] = req.getSession();
 			}else if(parameterType.equals(ServletContext.class)){
-				parameters[i] = req.getServletContext();
+				parameters[i] = context == null ? req.getServletContext() : context;
 			}else if(parameterType.equals(ServletConfig.class)){
-				parameters[i] = servlet.getServletConfig();
+				logger.warning("doest not support ServletConfig Injection");
+				//parameters[i] = servlet.getServletConfig();
 			}else if(parameterType.isArray()){
 				String[] paramsValues = TextUtils.isNull(paramValue) ? new String[]{} : paramValue.split(",");
 				Class componentType = parameterType.getComponentType();
@@ -352,12 +354,31 @@ public class RestUtil {
 				writeText(String.valueOf(invokeResult), resp);
 			else if(responseType.equals(ResponseType.JSP))
 				req.getRequestDispatcher(String.valueOf(invokeResult)).forward(req, resp);
-			else if(responseType.equals(ResponseType.REDIRECT))
-				resp.sendRedirect(String.valueOf(invokeResult));
-			else
+			else if(responseType.equals(ResponseType.REDIRECT)){
+				//这边重定向有些问题
+				//如果requestURI是以contextPath开始的 则证明是类似于tomcat的应用
+				//否则就是绝对路径 即相对于根目录  如SAE
+				redirectAbsUrl(req,resp,String.valueOf(invokeResult));
+			}else
 				logger.warning("Unknown response type: " + responseType);
 		}else{
 			writeJson(invokeResult, resp);
 		}
 	}
+	
+	/**
+	 * 将重定向时的路径改为绝对路径 
+	 * @param req
+	 * @param resp
+	 * @param url
+	 * @return
+	 * @throws IOException 
+	 */
+	public static void redirectAbsUrl(HttpServletRequest req,HttpServletResponse resp,String url) throws IOException{
+		ServletContext context = RestFilter.context == null ? req.getServletContext() : RestFilter.context;
+		boolean flag = req.getRequestURI().startsWith(context.getContextPath());
+		String absUrl = String.format("%s/%s", flag ? context.getContextPath() : "",url.replaceFirst("^/", ""));
+		resp.sendRedirect(absUrl);
+	}
+	
 }
