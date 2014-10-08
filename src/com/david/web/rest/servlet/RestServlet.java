@@ -64,7 +64,7 @@ public class RestServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String uri = req.getRequestURI();
+		String uri = req.getRequestURI().replaceAll(";jsessionid=.*?(?=\\?|$)", "");
 		logger.info(String.format("uri-> %s", uri));
 		String contextPath = getServletContext().getContextPath();
 		if(contextPath.length() > 1 && uri.length() > contextPath.length()){

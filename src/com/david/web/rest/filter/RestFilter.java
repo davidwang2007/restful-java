@@ -50,7 +50,7 @@ public class RestFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)req1;
 		HttpServletResponse resp = (HttpServletResponse)resp1;
 		
-		String uri = req.getRequestURI();
+		String uri = req.getRequestURI().replaceAll(";jsessionid=.*?(?=\\?|$)", "");
 		logger.info(String.format("doFilter uri-> %s", uri));
 		
 		if(pattern.matcher(uri).find()){//表示访问的是静态资源
